@@ -53,7 +53,7 @@ jobs:
 
       - name: Make and release deps
         run: |
-          (cd src/lima && git clean -f -d)
+          (cd src/lima && git clean -f -d && git am ../patches/lima/*.patch)
           make -C src/lima PREFIX=/opt/homebrew all install
           ./bin/lima-and-qemu.pl
           mv src/lima/lima-and-qemu.tar.gz src/lima/lima-and-qemu.macos-aarch64.tar.gz
