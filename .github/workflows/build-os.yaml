@@ -32,8 +32,7 @@ jobs:
 
       - name: Install mkosi
         run: |
-          sudo dnf install -y mkosi
-
+          ./deps/mkosi/install-mkosi.sh
       - name: Run build
         run: |
           cd ./deps/mkosi && sudo ARCH="aarch64" ./build.sh
