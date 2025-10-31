@@ -38,8 +38,20 @@ pushd ./binfmt
 rm -rf bin
 # docker run --privileged --rm tonistiigi/binfmt --install all
 
+BUILDER_NAME="qemu-builder"
+
+# create builder if it doesn't exist
+if ! docker buildx ls | grep -q "$BUILDER_NAME"; then
+    echo "Builder '$BUILDER_NAME' does not exist. Creating it..."
+    docker buildx create --name "$BUILDER_NAME" --driver docker-container --use
+else
+    echo "Builder '$BUILDER_NAME' already exists."
+    docker buildx use "$BUILDER_NAME"
+fi
+
 # caching helps with rate limiting
 DOCKER_PARAMS=(buildx bake desktop \
+  --builder "${BUILDER_NAME}"
   --set "*.output=type=local,dest=./bin,platform-split=true" \
   --set "*.platform=linux/$docker_arch"
 )
