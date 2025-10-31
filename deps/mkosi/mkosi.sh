@@ -81,11 +81,17 @@ case $arch in
     x86_64)
         mkosi_arch="x86-64"
         ;;
+    amd64)
+        mkosi_arch="x86-64"
+        ;;
     aarch64)
         mkosi_arch="arm64"
         ;;
+    arm64)
+        mkosi_arch="arm64"
+        ;;
     *)
-        echo "Unsupported architecture: $ARCH"
+        echo "Unsupported architecture: $arch"
         ;;
 esac
 
