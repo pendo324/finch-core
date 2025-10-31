@@ -8,7 +8,8 @@ wingit-temp/
 **/*.tar.gz
 .vscode/
 **/node_modules
-deps/mkosi/mkosi.cache/
+deps/mkosi/mkosi.cache/*.*
+!deps/mkosi/mkosi.cache/*.gitkeep
 deps/mkosi/mkosi.builddir/
 deps/mkosi/mkosi.extra/
 deps/mkosi/binfmt/bin
