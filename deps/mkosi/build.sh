@@ -39,15 +39,16 @@ rm -rf bin
 # docker run --privileged --rm tonistiigi/binfmt --install all
 
 # caching helps with rate limiting
+DOCKER_PARAMS=(buildx bake desktop \
+  --set "*.output=type=local,dest=./bin,platform-split=true" \
+  --set "*.platform=linux/$docker_arch"
+)
 DOCKER_CACHE_OPTIONS=""
 if [ "$GITHUB_ACTIONS" = "true" ]; then
-  DOCKER_CACHE_OPTIONS="--cache-to type=gha --cache-from type=gha"
+  DOCKER_PARAMS+=(--cache-to=type=gha)
+  DOCKER_PARAMS+=(--cache-from=type=gha)
 fi
-docker buildx bake desktop \
-  --set "*.output=type=local,dest=./bin,platform-split=true" \
-  --set "*.platform=linux/$docker_arch" \
-  "$DOCKER_CACHE_OPTIONS"
-  # --set "*.platform=linux/amd64,linux/arm64"
+docker "${DOCKER_PARAMS[@]}"
 
 popd
 
