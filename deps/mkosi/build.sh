@@ -62,7 +62,8 @@ curl "https://gitlab.com/api/v4/projects/qemu-project%2Fqemu/repository/files/sc
 
 chmod +x qemu-binfmt-conf.sh
 
-mkdir -p "./binfmt/bin/linux_${docker_arch}/lib/binfmt.d/"
+BUILD_OUT_LIB_DIR="./binfmt/bin/linux_${docker_arch}/lib"
+mkdir -p ".${BUILD_OUT_LIB_DIR}/binfmt.d/"
 
 export HOST_ARCH="${ARCH}"
 ./qemu-binfmt-conf.sh --systemd ALL \
@@ -70,11 +71,15 @@ export HOST_ARCH="${ARCH}"
   --persistent yes \
   --preserve-argv0 yes \
   -Q /usr/bin \
-  --exportdir "./binfmt/bin/linux_${docker_arch}/lib/binfmt.d/"
+  --exportdir ".${BUILD_OUT_LIB_DIR}/binfmt.d/"
 
 MKOSI_USR_PATH="./mkosi.extra/usr"
 MKOSI_BINFMT_PATH="${MKOSI_USR_PATH}/lib/binfmt.d"
 MKOSI_USR_BIN_PATH="${MKOSI_USR_PATH}/bin"
+
+# this will be of the form ./binfmt/bin/linux_${docker_arch}/usr/bin if building for multiple
+# platforms at once, with platform-split=true set
+BUILD_OUT_BIN_DIR="./binfmt/bin/usr/bin"
 
 # Cleanup
 rm -rf "${MKOSI_USR_BIN_PATH}/"
@@ -83,16 +88,16 @@ rm -rf "${MKOSI_BINFMT_PATH}/"
 # Move files to mkosi.extra dir so they are coppied into the image
 mkdir -p "${MKOSI_USR_BIN_PATH}/"
 
-cp "./binfmt/bin/linux_${docker_arch}/usr/bin/qemu-${main_emu_arch}" "${MKOSI_USR_BIN_PATH}/qemu-${main_emu_arch}-static"
-cp "./binfmt/bin/linux_${docker_arch}/usr/bin/qemu-i386" "${MKOSI_USR_BIN_PATH}/qemu-i386-static"
-cp "./binfmt/bin/linux_${docker_arch}/usr/bin/qemu-arm" "${MKOSI_USR_BIN_PATH}/qemu-arm-static"
+cp "${BUILD_OUT_BIN_DIR}/qemu-${main_emu_arch}" "${MKOSI_USR_BIN_PATH}/qemu-${main_emu_arch}-static"
+cp "${BUILD_OUT_BIN_DIR}/qemu-i386" "${MKOSI_USR_BIN_PATH}/qemu-i386-static"
+cp "${BUILD_OUT_BIN_DIR}/qemu-arm" "${MKOSI_USR_BIN_PATH}/qemu-arm-static"
 
 # /lib/ is a symlink to /usr/lib/ in Fedora
 mkdir -p "${MKOSI_BINFMT_PATH}"
 # based on the ${ARCH}, some of these files won't be generated so just re-use qemu-${main_emu_arch} every time
-cp "./binfmt/bin/linux_${docker_arch}/lib/binfmt.d/qemu-${main_emu_arch}.conf" "${MKOSI_BINFMT_PATH}/qemu-${main_emu_arch}-static.conf"
-cp "./binfmt/bin/linux_${docker_arch}/lib/binfmt.d/qemu-${main_emu_arch}.conf" "${MKOSI_BINFMT_PATH}/qemu-i386-static.conf"
-cp "./binfmt/bin/linux_${docker_arch}/lib/binfmt.d/qemu-${main_emu_arch}.conf" "${MKOSI_BINFMT_PATH}/qemu-arm-static.conf"
+cp "${BUILD_OUT_LIB_DIR}/binfmt.d/qemu-${main_emu_arch}.conf" "${MKOSI_BINFMT_PATH}/qemu-${main_emu_arch}-static.conf"
+cp "${BUILD_OUT_LIB_DIR}/binfmt.d/qemu-${main_emu_arch}.conf" "${MKOSI_BINFMT_PATH}/qemu-i386-static.conf"
+cp "${BUILD_OUT_LIB_DIR}/binfmt.d/qemu-${main_emu_arch}.conf" "${MKOSI_BINFMT_PATH}/qemu-arm-static.conf"
 
 sed -i "s|/usr/bin/qemu-${main_emu_arch}|/usr/bin/qemu-${main_emu_arch}-static|g" "${MKOSI_BINFMT_PATH}/qemu-${main_emu_arch}-static.conf"
 sed -i "s|/usr/bin/qemu-${main_emu_arch}|/usr/bin/qemu-i386-static|g" "${MKOSI_BINFMT_PATH}qemu-i386-static.conf"
