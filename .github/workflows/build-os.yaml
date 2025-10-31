@@ -34,6 +34,7 @@ jobs:
 
       - name: Install mkosi
         run: |
+          echo "$PATH"
           ./deps/mkosi/install-mkosi.sh
       - name: Run build
         run: |
