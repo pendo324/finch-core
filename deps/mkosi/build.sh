@@ -45,8 +45,8 @@ DOCKER_PARAMS=(buildx bake desktop \
 )
 DOCKER_CACHE_OPTIONS=""
 if [ "$GITHUB_ACTIONS" = "true" ]; then
-  DOCKER_PARAMS+=(--cache-to=type=gha)
-  DOCKER_PARAMS+=(--cache-from=type=gha)
+  DOCKER_PARAMS+=(--set *.cache-from=type=gha)
+  DOCKER_PARAMS+=(--set *.cache-to=type=gha,mode=max)
 fi
 docker "${DOCKER_PARAMS[@]}"
 
