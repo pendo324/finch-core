@@ -63,7 +63,7 @@ curl "https://gitlab.com/api/v4/projects/qemu-project%2Fqemu/repository/files/sc
 chmod +x qemu-binfmt-conf.sh
 
 BUILD_OUT_LIB_DIR="./binfmt/bin/linux_${docker_arch}/lib"
-mkdir -p ".${BUILD_OUT_LIB_DIR}/binfmt.d/"
+mkdir -p "${BUILD_OUT_LIB_DIR}/binfmt.d/"
 
 export HOST_ARCH="${ARCH}"
 ./qemu-binfmt-conf.sh --systemd ALL \
@@ -71,7 +71,7 @@ export HOST_ARCH="${ARCH}"
   --persistent yes \
   --preserve-argv0 yes \
   -Q /usr/bin \
-  --exportdir ".${BUILD_OUT_LIB_DIR}/binfmt.d/"
+  --exportdir "${BUILD_OUT_LIB_DIR}/binfmt.d/"
 
 MKOSI_USR_PATH="./mkosi.extra/usr"
 MKOSI_BINFMT_PATH="${MKOSI_USR_PATH}/lib/binfmt.d"
