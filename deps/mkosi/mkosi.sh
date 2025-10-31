@@ -90,4 +90,4 @@ case $arch in
 esac
 
 # /home/fedora/mkosivenv/bin/mkosi -f --architecture="${mkosi_arch}" --output-directory="${MKOSI_OUT_DIR}" "${mkosi_args[@]}"
-MKOSI_DNF=/usr/bin/dnf4 /home/fedora/mkosivenv-al/bin/mkosi --debug -f --architecture="${mkosi_arch}" --output-directory="${MKOSI_OUT_DIR}" "${mkosi_args[@]}"
+MKOSI_DNF=/usr/bin/dnf4 mkosi --debug -f --architecture="${mkosi_arch}" --output-directory="${MKOSI_OUT_DIR}" "${mkosi_args[@]}"
