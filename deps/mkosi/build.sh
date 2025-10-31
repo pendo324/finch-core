@@ -43,10 +43,11 @@ DOCKER_PARAMS=(buildx bake desktop \
   --set "*.output=type=local,dest=./bin,platform-split=true" \
   --set "*.platform=linux/$docker_arch"
 )
+
 DOCKER_CACHE_OPTIONS=""
 if [ "$GITHUB_ACTIONS" = "true" ]; then
-  DOCKER_PARAMS+=(--set *.cache-from=type=gha)
-  DOCKER_PARAMS+=(--set *.cache-to=type=gha,mode=max)
+  DOCKER_PARAMS+=(--set *.cache-from=type=registry,ref="794587050305.dkr.ecr.us-east-1.amazonaws.com/codebuild-cache:qemu-build-${ARCH}")
+  DOCKER_PARAMS+=(--set *.cache-to=type=registry,mode=max,image-manifest=true,oci-mediatypes=true,ref="794587050305.dkr.ecr.us-east-1.amazonaws.com/codebuild-cache:qemu-build-${ARCH}")
 fi
 docker "${DOCKER_PARAMS[@]}"
 
@@ -88,7 +89,8 @@ rm -rf "${MKOSI_BINFMT_PATH}/"
 # Move files to mkosi.extra dir so they are coppied into the image
 mkdir -p "${MKOSI_USR_BIN_PATH}/"
 
-ls -lah "${BUILD_OUT_BIN_DIR}"
+pwd
+ls -lah
 ls -lah "./binfmt/bin"
 ls -lah "./binfmt/bin/usr"
 
