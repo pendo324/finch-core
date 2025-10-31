@@ -21,7 +21,9 @@ jobs:
     uses: ./.github/workflows/setup-runners.yaml
   build-os-image:
     needs: setup
-    runs-on: ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
+    runs-on:
+      - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
+      - buildspec-override:true
     strategy:
       matrix:
         os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
