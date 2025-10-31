@@ -7,6 +7,8 @@ on:
         value: ${{ jobs.setup.outputs.available-runners }}
       runner-labels:
         value: ${{ jobs.setup.outputs.runner-labels }}
+      runner-arches:
+        value: ${{ jobs.setup.outputs.runner-arches }}
 
 jobs:
   setup:
@@ -27,12 +29,16 @@ jobs:
         # having to write escaped json in a string.
         include:
           - runs-on-names-cb: [fedora, fedora-arm]
+            runner-arches-cb:
+              fedora: "amd64"
+              fedora-arm: "aarch64"
             runner-labels:
               fedora: "codebuild-finch-core-runners-${{ github.run_id }}-${{ github.run_attempt }}"
               fedora-arm: "codebuild-finch-core-runners-arm-${{ github.run_id }}-${{ github.run_attempt }}"
     outputs:
       available-runners: ${{ toJSON(matrix.runs-on-names-cb) }}
       runner-labels: ${{ toJSON(matrix.runner-labels) }}
+      runner-arches: ${{ toJSON(matrix.runner-arches-cb) }}
     steps:
       - name: Dump Config
         run: echo '${{ toJSON(matrix) }}'

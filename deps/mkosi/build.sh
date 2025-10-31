@@ -2,6 +2,9 @@
 
 set -xe
 
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd -- "${CURRENT_DIR}/.." && pwd)"
+
 # set arch to uname if its not set
 uname=$(uname -m)
 ARCH="${ARCH:-$uname}"
@@ -28,7 +31,7 @@ esac
 
 
 # Sync repo
-git submodule update --remote --merge
+git submodule update --remote --merge "${CURRENT_DIR}/binfmt"
 
 # Build
 pushd ./binfmt
