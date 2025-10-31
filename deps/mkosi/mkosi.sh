@@ -78,6 +78,9 @@ mkdir -p "${MKOSI_OUT_DIR}"
 
 mkosi_arch=""
 case $arch in
+    x86-64)
+        mkosi_arch="x86-64"
+        ;;
     x86_64)
         mkosi_arch="x86-64"
         ;;
