@@ -104,8 +104,8 @@ cp "${BUILD_OUT_LIB_DIR}/binfmt.d/qemu-${main_emu_arch}.conf" "${MKOSI_BINFMT_PA
 cp "${BUILD_OUT_LIB_DIR}/binfmt.d/qemu-${main_emu_arch}.conf" "${MKOSI_BINFMT_PATH}/qemu-arm-static.conf"
 
 sed -i "s|/usr/bin/qemu-${main_emu_arch}|/usr/bin/qemu-${main_emu_arch}-static|g" "${MKOSI_BINFMT_PATH}/qemu-${main_emu_arch}-static.conf"
-sed -i "s|/usr/bin/qemu-${main_emu_arch}|/usr/bin/qemu-i386-static|g" "${MKOSI_BINFMT_PATH}qemu-i386-static.conf"
-sed -i "s|/usr/bin/qemu-${main_emu_arch}|/usr/bin/qemu-arm-static|g" "${MKOSI_BINFMT_PATH}qemu-arm-static.conf"
+sed -i "s|/usr/bin/qemu-${main_emu_arch}|/usr/bin/qemu-i386-static|g" "${MKOSI_BINFMT_PATH}/qemu-i386-static.conf"
+sed -i "s|/usr/bin/qemu-${main_emu_arch}|/usr/bin/qemu-arm-static|g" "${MKOSI_BINFMT_PATH}/qemu-arm-static.conf"
 
 # Cleanup
 rm qemu-binfmt-conf.sh
