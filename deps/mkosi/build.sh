@@ -37,7 +37,8 @@ docker run --privileged --rm tonistiigi/binfmt --install all
 docker buildx bake desktop \
   --set "*.output=type=local,dest=./bin,platform-split=true" \
   --set "*.cache-from=" \
-  --set "*.platform=linux/amd64,linux/arm64"
+  # --set "*.platform=linux/amd64,linux/arm64"
+  --set "*.platform=linux/$docker_arch"
 
 popd
 
@@ -116,9 +117,10 @@ sudo chown root:root "${PASS_CREDENTIAL_MGR_PATH}"
 pushd ./al2023-build
 rm -rf ./_output
 rm -rf ./artifacts
-buildplatforms=("aarch64", "amd64")
+# buildplatforms=("aarch64", "amd64")
 # for buildplatform in "${buildplatforms[@]}"; do
-docker build --platform=linux/aarch64,linux/amd64 -t "al2023-build" .
+# docker build --platform=linux/aarch64,linux/amd64 -t "al2023-build" .
+docker build --platform="linux/$ARCH" -t "al2023-build" .
 docker save al2023-build > al2023-build.tar
 mkdir ./_output
 tar -xvf al2023-build.tar -C ./_output
