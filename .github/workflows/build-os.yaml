@@ -55,6 +55,7 @@ jobs:
           ./deps/mkosi/install-mkosi.sh
       - name: Run build
         run: |
+          export PATH="/root/.local/bin/:$PATH"
           cd ./deps/mkosi && ARCH="${{ env.arch }}" ./build.sh
           qemu-img convert -f raw -c -O qcow2 ./deps/mkosi/out/aarch64/disk/image.raw ./deps/mkosi/out/aarch64/disk/image.qcow2
 
