@@ -94,6 +94,10 @@ cp "${BUILD_OUT_BIN_DIR}/qemu-arm" "${MKOSI_USR_BIN_PATH}/qemu-arm-static"
 
 # /lib/ is a symlink to /usr/lib/ in Fedora
 mkdir -p "${MKOSI_BINFMT_PATH}"
+
+ls "${BUILD_OUT_LIB_DIR}/"
+ls "${BUILD_OUT_LIB_DIR}/binfmt.d/"
+
 # based on the ${ARCH}, some of these files won't be generated so just re-use qemu-${main_emu_arch} every time
 cp "${BUILD_OUT_LIB_DIR}/binfmt.d/qemu-${main_emu_arch}.conf" "${MKOSI_BINFMT_PATH}/qemu-${main_emu_arch}-static.conf"
 cp "${BUILD_OUT_LIB_DIR}/binfmt.d/qemu-${main_emu_arch}.conf" "${MKOSI_BINFMT_PATH}/qemu-i386-static.conf"

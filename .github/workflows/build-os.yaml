@@ -55,8 +55,8 @@ jobs:
           ./deps/mkosi/install-mkosi.sh
       - name: Run build
         run: |
-          cd ./deps/mkosi && sudo GITHUB_ACTIONS=true ARCH="${{ env.arch }}" ./build.sh
-          sudo qemu-img convert -f raw -c -O qcow2 ./deps/mkosi/out/aarch64/disk/image.raw ./deps/mkosi/out/aarch64/disk/image.qcow2
+          cd ./deps/mkosi && ARCH="${{ env.arch }}" ./build.sh
+          qemu-img convert -f raw -c -O qcow2 ./deps/mkosi/out/aarch64/disk/image.raw ./deps/mkosi/out/aarch64/disk/image.qcow2
 
       - name: Upload artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
