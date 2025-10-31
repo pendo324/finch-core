@@ -33,12 +33,19 @@ git submodule update --remote --merge
 # Build
 pushd ./binfmt
 rm -rf bin
-docker run --privileged --rm tonistiigi/binfmt --install all
+# docker run --privileged --rm tonistiigi/binfmt --install all
+
+# caching helps with rate limiting
+DOCKER_CACHE_OPTIONS=""
+if [ "$GITHUB_ACTIONS" = "true" ]; then
+  DOCKER_CACHE_OPTIONS="--cache-to type=gha --cache-from type=gha"
+fi
 docker buildx bake desktop \
   --set "*.output=type=local,dest=./bin,platform-split=true" \
   --set "*.cache-from=" \
   # --set "*.platform=linux/amd64,linux/arm64"
-  --set "*.platform=linux/$docker_arch"
+  --set "*.platform=linux/$docker_arch" \
+  "$DOCKER_CACHE_OPTIONS"
 
 popd
 
