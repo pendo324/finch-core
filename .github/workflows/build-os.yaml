@@ -1,0 +1,47 @@
+name: Build and Push Rootfs Docker Image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'deps/mkosi/*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'deps/mkosi/*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    uses: ./.github/workflows/setup-runners.yaml
+  build-os-image:
+    needs: setup
+    runs-on: ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
+    strategy:
+      matrix:
+        os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Install mkosi
+        run: |
+          sudo dnf install -y mkosi
+
+      - name: Run build
+        run: |
+          cd ./deps/mkosi && sudo ARCH="aarch64" ./build.sh
+          sudo qemu-img convert -f raw -c -O qcow2 ./deps/mkosi/out/aarch64/disk/image.raw ./deps/mkosi/out/aarch64/disk/image.qcow2
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: image.qcow2
+          path: ./deps/mkosi/out/aarch64/disk/image.qcow2
+          if-no-files-found: error
