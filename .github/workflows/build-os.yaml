@@ -34,7 +34,10 @@ jobs:
 
       - name: Install mkosi
         run: |
-          echo "$PATH"
+          echo "$HOME"
+          echo "$USER"
+          mkdir -p /root/.local/bin/
+          export PATH="/root/.local/bin/:$PATH"
           ./deps/mkosi/install-mkosi.sh
       - name: Run build
         run: |
