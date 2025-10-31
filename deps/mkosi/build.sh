@@ -88,6 +88,10 @@ rm -rf "${MKOSI_BINFMT_PATH}/"
 # Move files to mkosi.extra dir so they are coppied into the image
 mkdir -p "${MKOSI_USR_BIN_PATH}/"
 
+ls -lah "${BUILD_OUT_BIN_DIR}"
+ls -lah "./binfmt/bin"
+ls -lah "./binfmt/bin/usr"
+
 cp "${BUILD_OUT_BIN_DIR}/qemu-${main_emu_arch}" "${MKOSI_USR_BIN_PATH}/qemu-${main_emu_arch}-static"
 cp "${BUILD_OUT_BIN_DIR}/qemu-i386" "${MKOSI_USR_BIN_PATH}/qemu-i386-static"
 cp "${BUILD_OUT_BIN_DIR}/qemu-arm" "${MKOSI_USR_BIN_PATH}/qemu-arm-static"
