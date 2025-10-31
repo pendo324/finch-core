@@ -45,7 +45,6 @@ if [ "$GITHUB_ACTIONS" = "true" ]; then
 fi
 docker buildx bake desktop \
   --set "*.output=type=local,dest=./bin,platform-split=true" \
-  --set "*.cache-from=" \
   --set "*.platform=linux/$docker_arch" \
   "$DOCKER_CACHE_OPTIONS"
   # --set "*.platform=linux/amd64,linux/arm64"

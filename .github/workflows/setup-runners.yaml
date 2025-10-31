@@ -30,7 +30,7 @@ jobs:
         include:
           - runs-on-names-cb: [fedora, fedora-arm]
             runner-arches-cb:
-              fedora: "amd64"
+              fedora: "x86_64"
               fedora-arm: "aarch64"
             runner-labels:
               fedora: "codebuild-finch-core-runners-${{ github.run_id }}-${{ github.run_attempt }}"
