@@ -27,6 +27,7 @@ jobs:
     env:
       arch: ${{ fromJSON(needs.setup.outputs.runner-arches)[matrix.os] }}
     strategy:
+      fail-fast: false
       matrix:
         os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
     timeout-minutes: 15
