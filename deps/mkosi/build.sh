@@ -178,7 +178,7 @@ blob_prefix="./_output/blobs/sha256/"
 index_manifest=$(jq -r '.manifests[0].digest' ./_output/index.json | sed -e 's/^sha256://')
 
 # Check if the first layer's mediaType is application/vnd.oci.image.layer.v1.tar
-media_type=$(jq -r '.layers[0].mediaType' "${blob_prefix}${index_manifest}"
+media_type=$(jq -r '.layers[0].mediaType' "${blob_prefix}${index_manifest}")
 if [ "$media_type" = "application/vnd.oci.image.layer.v1.tar" ]; then
   # For uncompressed tar layers, use the layer digest directly
   layer_file="${blob_prefix}$(jq -r '.layers[0].digest' ${image_manifest_file} | sed -e 's/^sha256://' )"
