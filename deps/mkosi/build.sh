@@ -159,7 +159,7 @@ rm -rf ./artifacts
 # docker build --platform=linux/aarch64,linux/amd64 -t "al2023-build" .
 
 DOCKER_PACKAGE_BUILD_PARAMS=(buildx build --builder "${BUILDER_NAME}" \
-  --platform="linux/$ARCH" -t "al2023-build" .
+  --platform="linux/$ARCH" -t "al2023-build" --load .
 )
 
 if [ "$GITHUB_ACTIONS" = "true" ]; then
