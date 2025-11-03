@@ -26,16 +26,13 @@ jobs:
       - ${{ matrix.os }}
       # - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
       # - buildspec-override:true
-    env:
-      arch: ${{ fromJSON(matrix.arch)[matrix.os] }}
-      # arch: ${{ fromJSON(needs.setup.outputs.runner-arches)[matrix.os] }}
+    # env:
+    #   arch: ${{ fromJSON(matrix.arch)[matrix.os] }}
+    #   # arch: ${{ fromJSON(needs.setup.outputs.runner-arches)[matrix.os] }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
-        arch:
-          - ubuntu-24.04: 'x86_64'
-          - ubuntu-24.04-arm: 'aarch64'
         # os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
     timeout-minutes: 15
     steps:
@@ -71,7 +68,7 @@ jobs:
       - name: Run build
         run: |
           export PATH="/root/.local/bin/:$PATH"
-          cd ./deps/mkosi && ARCH="${{ env.arch }}" ./build.sh
+          cd ./deps/mkosi && ./build.sh
           qemu-img convert -f raw -c -O qcow2 ./deps/mkosi/out/aarch64/disk/image.raw ./deps/mkosi/out/aarch64/disk/image.qcow2
 
       - name: Upload artifacts
