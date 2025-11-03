@@ -90,7 +90,7 @@ jobs:
         run: |
           sudo apt-get install --assume-yes --no-install-recommends debian-archive-keyring dnf
           export PATH="/root/.local/bin/:$PATH"
-          cd ./deps/mkosi && sudo PATH="/root/.local/bin/:$PATH" ./build.sh
+          cd ./deps/mkosi && sudo PATH="/root/.local/bin/:$PATH" GITHUB_ACTIONS=true ./build.sh
           sudo qemu-img convert -f raw -c -O qcow2 ./deps/mkosi/out/aarch64/disk/image.raw ./deps/mkosi/out/aarch64/disk/image.qcow2
 
       - name: Upload artifacts
