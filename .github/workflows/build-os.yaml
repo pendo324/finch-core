@@ -102,15 +102,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install --assume-yes --no-install-recommends debian-archive-keyring dnf systemd-boot mtools qemu-utils
           export PATH="/root/.local/bin/:$PATH"
-          cd ./deps/mkosi && sudo PATH="/root/.local/bin/:$PATH" \
+          cd ./deps/mkosi
+          sudo PATH="/root/.local/bin/:$PATH" \
             GITHUB_ACTIONS=true \
             ECR_CACHE_REPO="${{ secrets.ECR_CACHE_REPO }}" \
             ./build.sh
           arch="${{ steps.mkosi-arch.outputs.arch }}"
-          ls "./deps/mkosi/out/"
-          ls "./deps/mkosi/out/${arch}/disk/image.raw"
-          sudo qemu-img convert -f raw -c -O qcow2 "./deps/mkosi/out/${arch}/disk/image.raw" \
-          "./deps/mkosi/out/${arch}/disk/image.qcow2"
+          sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
+          "./out/${arch}/disk/image.qcow2"
       - name: Upload artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
