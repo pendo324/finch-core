@@ -107,19 +107,13 @@ jobs:
             ECR_CACHE_REPO="${{ secrets.ECR_CACHE_REPO }}" \
             ./build.sh
           arch="${{ steps.mkosi-arch.outputs.arch }}"
+          ls "./deps/mkosi/out/"
+          ls "./deps/mkosi/out/${arch}/disk/image.raw"
           sudo qemu-img convert -f raw -c -O qcow2 "./deps/mkosi/out/${arch}/disk/image.raw" \
           "./deps/mkosi/out/${arch}/disk/image.qcow2"
-
-      - name: Upload artifacts
-        if: ${{ always() }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: al2023-build
-          path: ./deps/mkosi/al2023-build/al2023-build.tar
-          if-no-files-found: warn
       - name: Upload artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: image.qcow2
+          name: image-${{github.run_id}}.qcow2
           path: ./deps/mkosi/out/${{ steps.mkosi-arch.outputs.arch }}/disk/image.qcow2
           if-no-files-found: error
