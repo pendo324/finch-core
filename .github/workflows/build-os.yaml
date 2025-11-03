@@ -18,19 +18,25 @@ permissions:
   id-token: write
 
 jobs:
-  setup:
-    uses: ./.github/workflows/setup-runners.yaml
+  # setup:
+  #   uses: ./.github/workflows/setup-runners.yaml
   build-os-image:
-    needs: setup
+    # needs: setup
     runs-on:
-      - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
-      - buildspec-override:true
+      - ${{ matrix.os }}
+      # - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
+      # - buildspec-override:true
     env:
-      arch: ${{ fromJSON(needs.setup.outputs.runner-arches)[matrix.os] }}
+      arch: ${{ fromJSON(matrix.arch)[matrix.os] }}
+      # arch: ${{ fromJSON(needs.setup.outputs.runner-arches)[matrix.os] }}
     strategy:
       fail-fast: false
       matrix:
-        os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+        arch:
+          - ubuntu-24.04: 'x86_64'
+          - ubuntu-24.04-arm: 'aarch64'
+        # os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
     timeout-minutes: 15
     steps:
       - name: Checkout repo
