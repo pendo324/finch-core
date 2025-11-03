@@ -57,7 +57,7 @@ DOCKER_PARAMS=(buildx bake desktop \
 )
 
 DOCKER_CACHE_OPTIONS=""
-if [[ ! -z "${ECR_CACHE_REPO}" ]; then
+if [[ ! -z "${ECR_CACHE_REPO}" ]]; then
   DOCKER_PARAMS+=(--set *.cache-from=type=registry,ref="${ECR_CACHE_REPO}:qemu-build-${ARCH}")
   DOCKER_PARAMS+=(--set *.cache-to=type=registry,mode=max,image-manifest=true,oci-mediatypes=true,ref="${ECR_CACHE_REPO}:qemu-build-${ARCH}")
 fi
