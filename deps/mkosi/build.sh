@@ -52,7 +52,7 @@ fi
 # caching helps with rate limiting
 DOCKER_PARAMS=(buildx bake desktop \
   --builder "${BUILDER_NAME}"
-  --set "*.output=type=local,dest=./bin,platform-split=true" \
+  --set "*.output=type=local,dest=./bin" \
   --set "*.platform=linux/$docker_arch"
 )
 
