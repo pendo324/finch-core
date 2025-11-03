@@ -57,9 +57,9 @@ DOCKER_PARAMS=(buildx bake desktop \
 )
 
 DOCKER_CACHE_OPTIONS=""
-if [ "$GITHUB_ACTIONS" = "true" ]; then
-  DOCKER_PARAMS+=(--set *.cache-from=type=registry,ref="794587050305.dkr.ecr.us-east-1.amazonaws.com/codebuild-cache:qemu-build-${ARCH}")
-  DOCKER_PARAMS+=(--set *.cache-to=type=registry,mode=max,image-manifest=true,oci-mediatypes=true,ref="794587050305.dkr.ecr.us-east-1.amazonaws.com/codebuild-cache:qemu-build-${ARCH}")
+if [[ ! -z "${ECR_CACHE_REPO}" ]; then
+  DOCKER_PARAMS+=(--set *.cache-from=type=registry,ref="${ECR_CACHE_REPO}:qemu-build-${ARCH}")
+  DOCKER_PARAMS+=(--set *.cache-to=type=registry,mode=max,image-manifest=true,oci-mediatypes=true,ref="${ECR_CACHE_REPO}:qemu-build-${ARCH}")
 fi
 docker "${DOCKER_PARAMS[@]}"
 
@@ -162,9 +162,9 @@ DOCKER_PACKAGE_BUILD_PARAMS=(buildx build --builder "${BUILDER_NAME}" \
   --platform="linux/$ARCH" -t "al2023-build" --load .
 )
 
-if [ "$GITHUB_ACTIONS" = "true" ]; then
-  DOCKER_PACKAGE_BUILD_PARAMS+=(--cache-from=type=registry,ref="794587050305.dkr.ecr.us-east-1.amazonaws.com/codebuild-cache:package-build-${ARCH}")
-  DOCKER_PACKAGE_BUILD_PARAMS+=(--cache-to=type=registry,mode=max,image-manifest=true,oci-mediatypes=true,ref="794587050305.dkr.ecr.us-east-1.amazonaws.com/codebuild-cache:package-build-${ARCH}")
+if [[ ! -z "${ECR_CACHE_REPO}" ]]; then
+  DOCKER_PACKAGE_BUILD_PARAMS+=(--cache-from=type=registry,ref="${ECR_CACHE_REPO}:package-build-${ARCH}")
+  DOCKER_PACKAGE_BUILD_PARAMS+=(--cache-to=type=registry,mode=max,image-manifest=true,oci-mediatypes=true,ref="${ECR_CACHE_REPO}:package-build-${ARCH}")
 fi
 docker "${DOCKER_PACKAGE_BUILD_PARAMS[@]}"
 
