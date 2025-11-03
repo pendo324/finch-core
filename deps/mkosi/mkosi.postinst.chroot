@@ -8,7 +8,7 @@ ls /opt
 rpm -ivh "/opt/cosign.rpm"
 rm -rf "/opt/cosign.rpm"
 
-rpm -ivh "/opt/fuse-sshfs-*.amzn2023.aarch64.rpm"
+rpm -ivh "/opt/fuse-sshfs-*.amzn2023.*.rpm"
 rm -rf "/opt/fuse*"
 
 rpm -e --noscripts --nodeps cloud-init
