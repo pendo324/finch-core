@@ -191,6 +191,8 @@ find . -iregex "\./artifacts/fuse-sshfs-[0-9].*" -exec cp {} ../mkosi.extra/opt/
 find . -iregex "\./artifacts/cloud-init-[0-9].*" -exec cp {} ../mkosi.extra/opt/ \;
 find . -iregex "\./artifacts/fuse-sshfs-[0-9].*${ARCH}.*" -exec cp {} ../mkosi.extra/opt/ \;
 
+ls -lah ../mkosi.extra/opt/
+
 popd
 
 # Both the unix-chkpwd and swtpm profiles are broken (https://gitlab.com/apparmor/apparmor/-/issues/402) so let's
