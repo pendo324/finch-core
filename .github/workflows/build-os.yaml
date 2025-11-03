@@ -88,10 +88,10 @@ jobs:
           sudo apt-get remove apparmor
       - name: Run build
         run: |
-          apt-get install --assume-yes --no-install-recommends debian-archive-keyring dnf
+          sudo apt-get install --assume-yes --no-install-recommends debian-archive-keyring dnf
           export PATH="/root/.local/bin/:$PATH"
-          cd ./deps/mkosi && ./build.sh
-          qemu-img convert -f raw -c -O qcow2 ./deps/mkosi/out/aarch64/disk/image.raw ./deps/mkosi/out/aarch64/disk/image.qcow2
+          cd ./deps/mkosi && sudo ./build.sh
+          sudo qemu-img convert -f raw -c -O qcow2 ./deps/mkosi/out/aarch64/disk/image.raw ./deps/mkosi/out/aarch64/disk/image.qcow2
 
       - name: Upload artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
