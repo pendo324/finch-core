@@ -157,7 +157,19 @@ rm -rf ./artifacts
 # buildplatforms=("aarch64", "amd64")
 # for buildplatform in "${buildplatforms[@]}"; do
 # docker build --platform=linux/aarch64,linux/amd64 -t "al2023-build" .
-docker build --platform="linux/$ARCH" -t "al2023-build" .
+
+DOCKER_PACKAGE_BUILD_PARAMS=(buildx build --builder "${BUILDER_NAME}" \
+  --cache-to \
+  --cache-from \
+  --platform="linux/$ARCH" -t "al2023-build" .
+)
+
+if [ "$GITHUB_ACTIONS" = "true" ]; then
+  DOCKER_PACKAGE_BUILD_PARAMS+=(--cache-from=type=registry,ref="794587050305.dkr.ecr.us-east-1.amazonaws.com/codebuild-cache:package-build-${ARCH}")
+  DOCKER_PACKAGE_BUILD_PARAMS+=(--cache-to=type=registry,mode=max,image-manifest=true,oci-mediatypes=true,ref="794587050305.dkr.ecr.us-east-1.amazonaws.com/codebuild-cache:package-build-${ARCH}")
+fi
+docker "${DOCKER_PACKAGE_BUILD_PARAMS[@]}"
+
 docker save al2023-build > al2023-build.tar
 mkdir ./_output
 tar -xvf al2023-build.tar -C ./_output
