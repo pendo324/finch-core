@@ -159,8 +159,6 @@ rm -rf ./artifacts
 # docker build --platform=linux/aarch64,linux/amd64 -t "al2023-build" .
 
 DOCKER_PACKAGE_BUILD_PARAMS=(buildx build --builder "${BUILDER_NAME}" \
-  --cache-to \
-  --cache-from \
   --platform="linux/$ARCH" -t "al2023-build" .
 )
 
