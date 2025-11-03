@@ -88,6 +88,7 @@ jobs:
       #     sudo apt-get remove apparmor
       - name: Run build
         run: |
+          sudo ln -s "$HOME/.docker" /root/.docker
           sudo apt-get install --assume-yes --no-install-recommends debian-archive-keyring dnf
           export PATH="/root/.local/bin/:$PATH"
           cd ./deps/mkosi && sudo PATH="/root/.local/bin/:$PATH" GITHUB_ACTIONS=true ./build.sh
