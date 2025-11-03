@@ -65,8 +65,30 @@ jobs:
           export PATH="/root/.local/bin/:$PATH"
           export GITHUB_ACTIONS=true
           ./deps/mkosi/install-mkosi.sh
+      - name: Enable unprivileged user namespaces
+        shell: bash
+        run: |
+          sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_unconfined=0
+          sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Create missing mountpoints
+        shell: bash
+        run: |
+          sudo mkdir -p /var/lib/ca-certificates
+
+      # Both the unix-chkpwd and swtpm profiles are broken (https://gitlab.com/apparmor/apparmor/-/issues/402) so let's
+      # just disable and remove apparmor completely. It's not relevant in this context anyway.
+      # TODO: Remove if https://github.com/actions/runner-images/issues/10015 is ever fixed.
+      - name: Disable and mask apparmor service
+        shell: bash
+        run: |
+          # This command fails with a non-zero error code even though it unloads the apparmor profiles.
+          # https://gitlab.com/apparmor/apparmor/-/issues/403
+          sudo aa-teardown || true
+          sudo apt-get remove apparmor
       - name: Run build
         run: |
+          apt-get install --assume-yes --no-install-recommends debian-archive-keyring dnf
           export PATH="/root/.local/bin/:$PATH"
           cd ./deps/mkosi && ./build.sh
           qemu-img convert -f raw -c -O qcow2 ./deps/mkosi/out/aarch64/disk/image.raw ./deps/mkosi/out/aarch64/disk/image.qcow2
