@@ -181,7 +181,7 @@ index_manifest=$(jq -r '.manifests[0].digest' ./_output/index.json | sed -e 's/^
 media_type=$(jq -r '.layers[0].mediaType' "${blob_prefix}${index_manifest}")
 if [ "$media_type" = "application/vnd.oci.image.layer.v1.tar" ]; then
   # For uncompressed tar layers, use the layer digest directly
-  layer_file="${blob_prefix}$(jq -r '.layers[0].digest' ${image_manifest_file} | sed -e 's/^sha256://' )"
+  layer_file="${blob_prefix}$(jq -r '.layers[0].digest'"${blob_prefix}${index_manifest}" | sed -e 's/^sha256://' )"
   tar -xvf "${layer_file}" -C artifacts
 else
   jq -r '.manifests[] |
