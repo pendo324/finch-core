@@ -76,16 +76,16 @@ jobs:
         run: |
           sudo mkdir -p /var/lib/ca-certificates
 
-      # Both the unix-chkpwd and swtpm profiles are broken (https://gitlab.com/apparmor/apparmor/-/issues/402) so let's
-      # just disable and remove apparmor completely. It's not relevant in this context anyway.
-      # TODO: Remove if https://github.com/actions/runner-images/issues/10015 is ever fixed.
-      - name: Disable and mask apparmor service
-        shell: bash
-        run: |
-          # This command fails with a non-zero error code even though it unloads the apparmor profiles.
-          # https://gitlab.com/apparmor/apparmor/-/issues/403
-          sudo aa-teardown || true
-          sudo apt-get remove apparmor
+      # # Both the unix-chkpwd and swtpm profiles are broken (https://gitlab.com/apparmor/apparmor/-/issues/402) so let's
+      # # just disable and remove apparmor completely. It's not relevant in this context anyway.
+      # # TODO: Remove if https://github.com/actions/runner-images/issues/10015 is ever fixed.
+      # - name: Disable and mask apparmor service
+      #   shell: bash
+      #   run: |
+      #     # This command fails with a non-zero error code even though it unloads the apparmor profiles.
+      #     # https://gitlab.com/apparmor/apparmor/-/issues/403
+      #     sudo aa-teardown || true
+      #     sudo apt-get remove apparmor
       - name: Run build
         run: |
           sudo apt-get install --assume-yes --no-install-recommends debian-archive-keyring dnf

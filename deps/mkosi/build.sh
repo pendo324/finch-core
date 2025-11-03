@@ -181,4 +181,13 @@ find . -iregex "\./artifacts/fuse-sshfs-[0-9].*${ARCH}.*" -exec cp {} ../mkosi.e
 
 popd
 
+# Both the unix-chkpwd and swtpm profiles are broken (https://gitlab.com/apparmor/apparmor/-/issues/402) so let's
+# just disable and remove apparmor completely. It's not relevant in this context anyway.
+# TODO: Remove if https://github.com/actions/runner-images/issues/10015 is ever fixed.
+
+# This command fails with a non-zero error code even though it unloads the apparmor profiles.
+# https://gitlab.com/apparmor/apparmor/-/issues/403
+sudo aa-teardown || true
+sudo apt-get remove apparmor
+
 ./mkosi.sh --format disk --arch $mkosi_arch
