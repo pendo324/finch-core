@@ -89,7 +89,7 @@ jobs:
       - name: Run build
         run: |
           sudo ln -s "$HOME/.docker" /root/.docker
-          sudo apt-get install --assume-yes --no-install-recommends debian-archive-keyring dnf
+          sudo apt-get install --assume-yes --no-install-recommends debian-archive-keyring dnf systemd-boot
           export PATH="/root/.local/bin/:$PATH"
           cd ./deps/mkosi && sudo PATH="/root/.local/bin/:$PATH" \
             GITHUB_ACTIONS=true \
