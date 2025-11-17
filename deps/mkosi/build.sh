@@ -209,7 +209,7 @@ popd
 
 # This command fails with a non-zero error code even though it unloads the apparmor profiles.
 # https://gitlab.com/apparmor/apparmor/-/issues/403
-sudo aa-teardown || true
-sudo apt-get remove apparmor
+# sudo aa-teardown || true
+# sudo apt-get remove apparmor
 
 ./mkosi.sh --format disk --arch $mkosi_arch
