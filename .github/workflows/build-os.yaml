@@ -27,7 +27,7 @@ jobs:
       # - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
       # - buildspec-override:true
     container:
-      image: public.ecr.aws/ubuntu/ubuntu:25.04
+      image: public.ecr.aws/docker/library/fedora:43
       options: --privileged
     # env:
     #   arch: ${{ fromJSON(matrix.arch)[matrix.os] }}
@@ -41,27 +41,17 @@ jobs:
     steps:
       - name: Install packages
         run: |
-          apt update --assume-yes
-          apt install --assume-yes --no-install-recommends \
-            git \
-            debian-archive-keyring \
-             dnf \
-             systemd-boot \
-             mtools \
-             qemu-utils \
-             ca-certificates \
-             docker.io \
-             docker-buildx \
-             curl \
-             sudo \
-             jq \
-             systemd-repart \
-             rpm \
-             xfsprogs \
-             dosfstools \
-             cpio \
-             zstd \
-             systemd-ukify
+          dnf install -y git \
+            systemd-boot \
+            systemd-repart \
+            systemd-ukify \
+            qemu-img \
+            docker \
+            jq \
+            xfsprogs \
+            dosfstools \
+            cpio \
+            zstd
       - name: Checkout repo
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
