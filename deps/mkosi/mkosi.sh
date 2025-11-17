@@ -100,4 +100,4 @@ esac
 
 # /home/fedora/mkosivenv/bin/mkosi -f --architecture="${mkosi_arch}" --output-directory="${MKOSI_OUT_DIR}" "${mkosi_args[@]}"
 # MKOSI_DNF=/usr/bin/dnf4 is needed on newer distros until this patch is availalbe https://github.com/rpm-software-management/dnf5/issues/1321
-mkosi --debug -f --architecture="${mkosi_arch}" --output-directory="${MKOSI_OUT_DIR}" "${mkosi_args[@]}"
+mkosi --debug -f --format="${format}" --architecture="${mkosi_arch}" --output-directory="${MKOSI_OUT_DIR}" "${mkosi_args[@]}"
