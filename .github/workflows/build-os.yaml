@@ -40,8 +40,8 @@ jobs:
     steps:
       - name: Install packages
         run: |
-          sudo apt update --assume-yes
-          sudo apt install --assume-yes --no-install-recommends git debian-archive-keyring dnf systemd-boot mtools qemu-utils
+          apt update --assume-yes
+          apt install --assume-yes --no-install-recommends git debian-archive-keyring dnf systemd-boot mtools qemu-utils
       - name: Checkout repo
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -74,13 +74,13 @@ jobs:
       - name: Enable unprivileged user namespaces
         shell: bash
         run: |
-          sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_unconfined=0
-          sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_userns=0
+          sysctl --ignore --write kernel.apparmor_restrict_unprivileged_unconfined=0
+          sysctl --ignore --write kernel.apparmor_restrict_unprivileged_userns=0
 
       - name: Create missing mountpoints
         shell: bash
         run: |
-          sudo mkdir -p /var/lib/ca-certificates
+          mkdir -p /var/lib/ca-certificates
 
       # # Both the unix-chkpwd and swtpm profiles are broken (https://gitlab.com/apparmor/apparmor/-/issues/402) so let's
       # # just disable and remove apparmor completely. It's not relevant in this context anyway.
@@ -104,15 +104,15 @@ jobs:
           echo "arch=${arch}" >> $GITHUB_OUTPUT
       - name: Run build
         run: |
-          sudo ln -s "$HOME/.docker" /root/.docker
+          ln -s "$HOME/.docker" /root/.docker
           export PATH="/root/.local/bin/:$PATH"
           cd ./deps/mkosi
-          sudo PATH="/root/.local/bin/:$PATH" \
+          PATH="/root/.local/bin/:$PATH" \
             GITHUB_ACTIONS=true \
             ECR_CACHE_REPO="${{ secrets.ECR_CACHE_REPO }}" \
             ./build.sh
           arch="${{ steps.mkosi-arch.outputs.arch }}"
-          sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
+          qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
           "./out/${arch}/disk/image.qcow2"
       - name: Upload artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
