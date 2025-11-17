@@ -58,6 +58,7 @@ jobs:
              systemd-repart \
              rpm \
              xfsprogs \
+             dosfstools \
              cpio \
              zstd
       - name: Checkout repo
