@@ -115,12 +115,12 @@ jobs:
           echo "arch=${arch}" >> $GITHUB_OUTPUT
       - name: Run build
         run: |
-          sudo ln -s "$HOME/.docker" /root/.docker
+          ln -s "$HOME/.docker" /root/.docker
           export PATH="/root/.local/bin/:$PATH"
           echo "${GITHUB_WORKSPACE}"
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           cd ./deps/mkosi
-          sudo PATH="/root/.local/bin/:$PATH" \
+          PATH="/root/.local/bin/:$PATH" \
             GITHUB_ACTIONS=true \
             ECR_CACHE_REPO="${{ secrets.ECR_CACHE_REPO }}" \
             ./build.sh
