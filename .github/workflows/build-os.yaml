@@ -115,7 +115,8 @@ jobs:
         run: |
           ln -s "$HOME/.docker" /root/.docker
           export PATH="/root/.local/bin/:$PATH"
-          git config --global --add safe.directory "${GITHUB_WORKSPACE}/finch-core/finch-core"
+          echo "${GITHUB_WORKSPACE}"
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           cd ./deps/mkosi
           PATH="/root/.local/bin/:$PATH" \
             GITHUB_ACTIONS=true \
