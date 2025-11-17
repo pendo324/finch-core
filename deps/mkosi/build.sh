@@ -212,4 +212,4 @@ popd
 sudo aa-teardown || true
 sudo apt-get remove apparmor
 
-./mkosi.sh --format esp --arch $mkosi_arch
+./mkosi.sh --format disk --arch $mkosi_arch

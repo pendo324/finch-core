@@ -135,11 +135,11 @@ jobs:
             ECR_CACHE_REPO="${{ secrets.ECR_CACHE_REPO }}" \
             ./build.sh
           arch="${{ steps.mkosi-arch.outputs.arch }}"
-          sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/esp/image.raw" \
-          "./out/${arch}/esp/image.qcow2"
+          sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
+          "./out/${arch}/disk/image.qcow2"
       - name: Upload artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: image-${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}.qcow2
-          path: ./deps/mkosi/out/${{ steps.mkosi-arch.outputs.arch }}/esp/image.qcow2
+          path: ./deps/mkosi/out/${{ steps.mkosi-arch.outputs.arch }}/disk/image.qcow2
           if-no-files-found: error
