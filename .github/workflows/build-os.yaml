@@ -113,6 +113,7 @@ jobs:
       #     sudo apt-get remove apparmor
       - name: mkosi arch
         id: mkosi-arch
+        shell: bash
         run: |
           arch=""
           if [ "$(uname -m)" == "aarch64" ]; then
