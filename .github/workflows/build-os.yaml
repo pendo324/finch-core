@@ -121,7 +121,7 @@ jobs:
           echo "${GITHUB_WORKSPACE}"
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           cd ./deps/mkosi
-          PATH="/root/.local/bin/:$PATH" \
+          PATH="/$HOME/.local/bin/:$PATH" \
             GITHUB_ACTIONS=true \
             ECR_CACHE_REPO="${{ secrets.ECR_CACHE_REPO }}" \
             ./build.sh
