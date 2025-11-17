@@ -51,7 +51,8 @@ jobs:
              ca-certificates \
              docker.io \
              docker-buildx \
-             curl
+             curl \
+             sudo
       - name: Checkout repo
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -84,8 +85,8 @@ jobs:
       - name: Enable unprivileged user namespaces
         shell: bash
         run: |
-          sysctl --ignore --write kernel.apparmor_restrict_unprivileged_unconfined=0
-          sysctl --ignore --write kernel.apparmor_restrict_unprivileged_userns=0
+          sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_unconfined=0
+          sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_userns=0
 
       - name: Create missing mountpoints
         shell: bash
@@ -114,17 +115,17 @@ jobs:
           echo "arch=${arch}" >> $GITHUB_OUTPUT
       - name: Run build
         run: |
-          ln -s "$HOME/.docker" /root/.docker
+          sudo ln -s "$HOME/.docker" /root/.docker
           export PATH="/root/.local/bin/:$PATH"
           echo "${GITHUB_WORKSPACE}"
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           cd ./deps/mkosi
-          PATH="/root/.local/bin/:$PATH" \
+          sudo PATH="/root/.local/bin/:$PATH" \
             GITHUB_ACTIONS=true \
             ECR_CACHE_REPO="${{ secrets.ECR_CACHE_REPO }}" \
             ./build.sh
           arch="${{ steps.mkosi-arch.outputs.arch }}"
-          qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
+          sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
           "./out/${arch}/disk/image.qcow2"
       - name: Upload artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
