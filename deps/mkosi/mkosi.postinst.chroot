@@ -56,6 +56,8 @@ EOF'
 # Fix SELinux labels so systemd service can start
 restorecon -R -v /usr/bin/
 
+touch /etc/machine-id
+
 # dnf remove grub* --setopt protected_packages=
 
 # ls -la /
