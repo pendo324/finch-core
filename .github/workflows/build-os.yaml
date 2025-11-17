@@ -28,6 +28,7 @@ jobs:
       # - buildspec-override:true
     container:
       image: public.ecr.aws/ubuntu/ubuntu:25.04
+      options: --privileged
     # env:
     #   arch: ${{ fromJSON(matrix.arch)[matrix.os] }}
     #   # arch: ${{ fromJSON(needs.setup.outputs.runner-arches)[matrix.os] }}
