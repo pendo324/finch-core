@@ -38,6 +38,10 @@ jobs:
         # os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
     timeout-minutes: 15
     steps:
+      - name: Install packages
+        run: |
+          sudo apt update --assume-yes
+          sudo apt install --assume-yes --no-install-recommends git debian-archive-keyring dnf systemd-boot mtools qemu-utils
       - name: Checkout repo
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -101,8 +105,6 @@ jobs:
       - name: Run build
         run: |
           sudo ln -s "$HOME/.docker" /root/.docker
-          sudo apt-get update
-          sudo apt-get install --assume-yes --no-install-recommends debian-archive-keyring dnf systemd-boot mtools qemu-utils
           export PATH="/root/.local/bin/:$PATH"
           cd ./deps/mkosi
           sudo PATH="/root/.local/bin/:$PATH" \
