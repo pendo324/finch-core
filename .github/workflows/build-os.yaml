@@ -98,12 +98,13 @@ jobs:
       - name: Run container build
         if: steps.mkosi-arch.outputs.arch == 'x86-64'
         run: |
+          set -x
           cd ./deps/mkosi
           arch="${{ steps.mkosi-arch.outputs.arch }}"
           PATH="/$HOME/.local/bin/:$PATH" ./mkosi.sh --format oci --arch $arch
           ls "./out/${arch}/oci/"
           ls "./out/${arch}/oci/image"
-          tar -cvf  "./out/${arch}/oci/image.tar" "./out/${arch}/oci/image"
+          tar -cvf "./out/${arch}/oci/image.tar" "./out/${arch}/oci/image"
           ls "./out/${arch}/oci/"
           # image_id=$(docker load -i "./out/${arch}/oci/image.tar" | awk '{print $NF}')
           # docker image ls
