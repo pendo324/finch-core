@@ -103,7 +103,9 @@ jobs:
           PATH="/$HOME/.local/bin/:$PATH" ./mkosi.sh --format oci --arch $arch
           ls "./out/${arch}/oci/"
           ls "./out/${arch}/oci/image"
-          image_id=$(docker buildx build --load "oci-layout://./out/${arch}/oci/image" | awk '{print $NF}')
+          tar -cvf  "./out/${arch}/oci/image.tar" "./out/${arch}/oci/image"
+          ls "./out/${arch}/oci/"
+          image_id=$(docker load "./out/${arch}/oci/image.tar" | awk '{print $NF}')
           docker image ls
           echo "Loaded image ID: ${image_id}"
           docker tag "${image_id}" "finch-os:latest"
