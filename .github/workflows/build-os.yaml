@@ -104,7 +104,7 @@ jobs:
           PATH="/$HOME/.local/bin/:$PATH" ./mkosi.sh --format oci --arch $arch
           ls "./out/${arch}/oci/"
           ls "./out/${arch}/oci/image"
-          tar -cvf "./out/${arch}/oci/image.tar" -C "./out/${arch}/oci/" image
+          tar -cvf "./out/${arch}/oci/image.tar" -C "./out/${arch}/oci/image" .
           ls "./out/${arch}/oci/"
           # image_id=$(docker load -i "./out/${arch}/oci/image.tar" | awk '{print $NF}')
           # docker image ls
