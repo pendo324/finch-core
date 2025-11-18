@@ -28,7 +28,7 @@ jobs:
       - buildspec-override:true
     container:
       image: public.ecr.aws/docker/library/fedora:43
-      options: --privileged
+      options: --privileged --security-opt seccomp=unconfined
     # env:
     #   arch: ${{ fromJSON(matrix.arch)[matrix.os] }}
     #   # arch: ${{ fromJSON(needs.setup.outputs.runner-arches)[matrix.os] }}
