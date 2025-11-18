@@ -18,13 +18,13 @@ permissions:
   id-token: write
 
 jobs:
-  # setup:
-  #   uses: ./.github/workflows/setup-runners.yaml
+  setup:
+    uses: ./.github/workflows/setup-runners.yaml
   build-os-image:
-    # needs: setup
+    needs: setup
     runs-on:
-      - ${{ matrix.os }}
-      # - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
+      # - ${{ matrix.os }}
+      - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
       # - buildspec-override:true
     container:
       image: public.ecr.aws/docker/library/fedora:43
@@ -35,8 +35,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, ubuntu-24.04-arm]
-        # os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
+        # os: [ubuntu-24.04, ubuntu-24.04-arm]
+        os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
     timeout-minutes: 15
     steps:
       - name: Install packages
@@ -85,16 +85,16 @@ jobs:
           export PATH="/root/.local/bin/:$PATH"
           export GITHUB_ACTIONS=true
           ./deps/mkosi/install-mkosi.sh
-      - name: Enable unprivileged user namespaces
-        shell: bash
-        run: |
-          sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_unconfined=0
-          sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_userns=0
+      # - name: Enable unprivileged user namespaces
+      #   shell: bash
+      #   run: |
+      #     sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_unconfined=0
+      #     sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_userns=0
 
-      - name: Create missing mountpoints
-        shell: bash
-        run: |
-          mkdir -p /var/lib/ca-certificates
+      # - name: Create missing mountpoints
+      #   shell: bash
+      #   run: |
+      #     mkdir -p /var/lib/ca-certificates
 
       # # Both the unix-chkpwd and swtpm profiles are broken (https://gitlab.com/apparmor/apparmor/-/issues/402) so let's
       # # just disable and remove apparmor completely. It's not relevant in this context anyway.
