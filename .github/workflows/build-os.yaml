@@ -25,7 +25,7 @@ jobs:
     runs-on:
       # - ${{ matrix.os }}
       - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
-      # - buildspec-override:true
+      - buildspec-override:true
     container:
       image: public.ecr.aws/docker/library/fedora:43
       options: --privileged
