@@ -18,25 +18,16 @@ permissions:
   id-token: write
 
 jobs:
-  # setup:
-  #   uses: ./.github/workflows/setup-runners.yaml
   build-os-image:
-    # needs: setup
     runs-on:
       - ${{ matrix.os }}
-      # - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
-      # - buildspec-override:true
     container:
       image: public.ecr.aws/docker/library/fedora:43
       options: --privileged
-    # env:
-    #   arch: ${{ fromJSON(matrix.arch)[matrix.os] }}
-    #   # arch: ${{ fromJSON(needs.setup.outputs.runner-arches)[matrix.os] }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
-        # os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
     timeout-minutes: 15
     steps:
       - name: Install packages
@@ -60,12 +51,6 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           submodules: true
-      # - name: Set Docker
-      #   uses: docker/setup-docker-action@3fb92d6d9c634363128c8cce4bc3b2826526370a # v4.4.0
-      # - name: Set up QEMU
-      #   uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -85,27 +70,6 @@ jobs:
           export PATH="/root/.local/bin/:$PATH"
           export GITHUB_ACTIONS=true
           ./deps/mkosi/install-mkosi.sh
-      # - name: Enable unprivileged user namespaces
-      #   shell: bash
-      #   run: |
-      #     sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_unconfined=0
-      #     sudo sysctl --ignore --write kernel.apparmor_restrict_unprivileged_userns=0
-
-      # - name: Create missing mountpoints
-      #   shell: bash
-      #   run: |
-      #     mkdir -p /var/lib/ca-certificates
-
-      # # Both the unix-chkpwd and swtpm profiles are broken (https://gitlab.com/apparmor/apparmor/-/issues/402) so let's
-      # # just disable and remove apparmor completely. It's not relevant in this context anyway.
-      # # TODO: Remove if https://github.com/actions/runner-images/issues/10015 is ever fixed.
-      # - name: Disable and mask apparmor service
-      #   shell: bash
-      #   run: |
-      #     # This command fails with a non-zero error code even though it unloads the apparmor profiles.
-      #     # https://gitlab.com/apparmor/apparmor/-/issues/403
-      #     sudo aa-teardown || true
-      #     sudo apt-get remove apparmor
       - name: mkosi arch
         id: mkosi-arch
         shell: bash
