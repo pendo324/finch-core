@@ -102,15 +102,13 @@ jobs:
           cd ./deps/mkosi
           arch="${{ steps.mkosi-arch.outputs.arch }}"
           PATH="/$HOME/.local/bin/:$PATH" ./mkosi.sh --format oci --arch $arch
-          ls "./out/${arch}/oci/"
-          ls "./out/${arch}/oci/image"
           tar -cvf "./out/${arch}/oci/image.tar" -C "./out/${arch}/oci/image" .
-          ls "./out/${arch}/oci/"
-          # image_id=$(docker load -i "./out/${arch}/oci/image.tar" | awk '{print $NF}')
-          # docker image ls
-          # echo "Loaded image ID: ${image_id}"
-          # docker tag "${image_id}" "finch-os:latest"
-          # docker image ls
+          image_id=$(docker load -i "./out/${arch}/oci/image.tar" | awk '{print $NF}')
+          docker image ls
+          echo "Loaded image ID: ${image_id}"
+          image_name="${{ secrets.ECR_CACHE_REPO }}:${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}"
+          docker tag "${image_id}" "${image_name}"
+          docker push "${image_name}"
       - name: Upload artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
