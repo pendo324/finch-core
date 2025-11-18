@@ -18,25 +18,25 @@ permissions:
   id-token: write
 
 jobs:
-  setup:
-    uses: ./.github/workflows/setup-runners.yaml
+  # setup:
+  #   uses: ./.github/workflows/setup-runners.yaml
   build-os-image:
-    needs: setup
+    # needs: setup
     runs-on:
-      # - ${{ matrix.os }}
-      - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
-      - buildspec-override:true
+      - ${{ matrix.os }}
+      # - ${{ fromJSON(needs.setup.outputs.runner-labels)[matrix.os] }}
+      # - buildspec-override:true
     container:
       image: public.ecr.aws/docker/library/fedora:43
-      options: --privileged --security-opt seccomp=unconfined
+      options: --privileged
     # env:
     #   arch: ${{ fromJSON(matrix.arch)[matrix.os] }}
     #   # arch: ${{ fromJSON(needs.setup.outputs.runner-arches)[matrix.os] }}
     strategy:
       fail-fast: false
       matrix:
-        # os: [ubuntu-24.04, ubuntu-24.04-arm]
-        os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+        # os: ${{ fromJSON(needs.setup.outputs.available-runners) }}
     timeout-minutes: 15
     steps:
       - name: Install packages
