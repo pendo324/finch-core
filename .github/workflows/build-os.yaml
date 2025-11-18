@@ -101,6 +101,8 @@ jobs:
           cd ./deps/mkosi
           arch="${{ steps.mkosi-arch.outputs.arch }}"
           PATH="/$HOME/.local/bin/:$PATH" ./mkosi.sh --format oci --arch $arch
+          ls "./out/${arch}/oci/"
+          ls "./out/${arch}/oci/image"
           image_id=$(docker load -i "./out/${arch}/oci/image" | awk '{print $NF}')
           docker image ls
           echo "Loaded image ID: ${image_id}"
