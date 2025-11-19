@@ -128,12 +128,12 @@ sed -i "s|/usr/bin/qemu-${main_emu_arch}|/usr/bin/qemu-arm-static|g" "${MKOSI_BI
 # Cleanup
 rm qemu-binfmt-conf.sh
 
-cosign_version="2.2.4-1"
+cosign_version="3.0.2-1"
 # This should match cosign_version ideally, but sometimes it doesn't
 # see: https://github.com/sigstore/cosign/releases/tag/v2.2.3 release for example
-cosign_release="2.2.4"
-# see: https://github.com/docker/docker-credential-helpers/releases/tag/v0.8.2 release
-docker_credential_helpers_release="0.8.2"
+cosign_release="3.0.2"
+# see: https://github.com/docker/docker-credential-helpers/releases/tag/v0.9.4 release
+docker_credential_helpers_release="0.9.4"
 
 PKGDIR="./mkosi.extra/opt"
 rm -rf "${PKGDIR}"
