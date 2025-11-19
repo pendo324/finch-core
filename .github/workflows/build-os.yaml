@@ -82,17 +82,6 @@ jobs:
             arch="x86-64"
           fi
           echo "arch=${arch}" >> $GITHUB_OUTPUT
-      - name: Run container build
-        if: steps.mkosi-arch.outputs.arch == 'x86-64'
-        run: |
-          set -x
-          cd ./deps/mkosi
-          arch="${{ steps.mkosi-arch.outputs.arch }}"
-          PATH="/$HOME/.local/bin/:$PATH" ./mkosi.sh --format oci --arch $arch
-          tar -cvf "./out/${arch}/oci/image.tar" -C "./out/${arch}/oci/image" .
-          skopeo copy \
-            "oci-archive:./out/${arch}/oci/image.tar" \
-            docker://"${{ secrets.ECR_WINDOWS_IMAGE_REPO }}:${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}"
       - name: Run OS image build
         run: |
           ln -s "$HOME/.docker" /root/.docker
@@ -106,6 +95,17 @@ jobs:
           arch="${{ steps.mkosi-arch.outputs.arch }}"
           sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
             "./out/${arch}/disk/image.qcow2"
+      - name: Run container build
+        if: steps.mkosi-arch.outputs.arch == 'x86-64'
+        run: |
+          set -x
+          cd ./deps/mkosi
+          arch="${{ steps.mkosi-arch.outputs.arch }}"
+          PATH="/$HOME/.local/bin/:$PATH" ./mkosi.sh --format oci --arch $arch
+          tar -cvf "./out/${arch}/oci/image.tar" -C "./out/${arch}/oci/image" .
+          skopeo copy \
+            "oci-archive:./out/${arch}/oci/image.tar" \
+            docker://"${{ secrets.ECR_WINDOWS_IMAGE_REPO }}:${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}"
       - name: Upload container image artifacts
         if: steps.mkosi-arch.outputs.arch == 'x86-64'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
