@@ -82,20 +82,6 @@ jobs:
             arch="x86-64"
           fi
           echo "arch=${arch}" >> $GITHUB_OUTPUT
-      - name: Run build
-        run: |
-          ln -s "$HOME/.docker" /root/.docker
-          export PATH="/root/.local/bin/:$PATH"
-          echo "${GITHUB_WORKSPACE}"
-          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
-          cd ./deps/mkosi
-          PATH="/$HOME/.local/bin/:$PATH" \
-            GITHUB_ACTIONS=true \
-            ECR_CACHE_REPO="${{ secrets.ECR_CACHE_REPO }}" \
-            ./build.sh
-          arch="${{ steps.mkosi-arch.outputs.arch }}"
-          sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
-          "./out/${arch}/disk/image.qcow2"
       - name: Run container build
         if: steps.mkosi-arch.outputs.arch == 'x86-64'
         run: |
@@ -107,16 +93,29 @@ jobs:
           skopeo copy \
             "oci-archive:./out/${arch}/oci/image.tar" \
             docker://"${{ secrets.ECR_WINDOWS_IMAGE_REPO }}:${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}"
-      - name: Upload artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: image-${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}.qcow2
-          path: ./deps/mkosi/out/${{ steps.mkosi-arch.outputs.arch }}/disk/image.qcow2
-          if-no-files-found: error
-      - name: Upload artifacts
+      - name: Run OS image build
+        run: |
+          ln -s "$HOME/.docker" /root/.docker
+          export PATH="/root/.local/bin/:$PATH"
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+          cd ./deps/mkosi
+          PATH="/$HOME/.local/bin/:$PATH" \
+            GITHUB_ACTIONS=true \
+            ECR_CACHE_REPO="${{ secrets.ECR_CACHE_REPO }}" \
+            ./build.sh
+          arch="${{ steps.mkosi-arch.outputs.arch }}"
+          sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
+            "./out/${arch}/disk/image.qcow2"
+      - name: Upload container image artifacts
         if: steps.mkosi-arch.outputs.arch == 'x86-64'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: image-oci-${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}.tar
           path: ./deps/mkosi/out/${{ steps.mkosi-arch.outputs.arch }}/oci/image.tar
+          if-no-files-found: error
+      - name: Upload OS image artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: image-${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}.qcow2
+          path: ./deps/mkosi/out/${{ steps.mkosi-arch.outputs.arch }}/disk/image.qcow2
           if-no-files-found: error
