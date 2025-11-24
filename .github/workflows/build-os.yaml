@@ -95,10 +95,10 @@ jobs:
           arch="${{ steps.mkosi-arch.outputs.arch }}"
           sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
             "./out/${arch}/disk/image.qcow2"
-          tar -cvf "./out/${arch}/disk/container-with-kernel/image.tar" -C "./out/${arch}/disk/container-with-kernel" .
+          tar -cvf "./out/${arch}/disk/image.tar" -C "./out/${arch}/disk/container-with-kernel" .
           skopeo copy \
             "oci-archive:./out/${arch}/disk/container-with-kernel/image.tar" \
-            docker://"${{ secrets.ECR_WINDOWS_IMAGE_REPO }}:${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}"
+            docker://"${{ secrets.ECR_WINDOWS_IMAGE_REPO }}:${{ steps.mkosi-arch.outputs.arch }}-with-kernel-${{github.run_id}}"
       - name: Run container build
         if: steps.mkosi-arch.outputs.arch == 'x86-64'
         run: |
