@@ -16,8 +16,6 @@ Options:
 
   --arch: Specify the target arch for the image.
 
-  --format: Specify the target format: disk or oci.
-
   -h,--help: Print this usage message.
 EOF
 }
@@ -42,17 +40,6 @@ while [ -n "${1-}" ]; do
         shift
         ;;
 
-    -f | --format)
-        format="${2}"
-        shift
-        shift
-        ;;
-
-    --format=*)
-        format="${i#*=}"
-        shift
-        ;;
-
     -h | --help)
         usage
         exit 0
@@ -71,9 +58,8 @@ while [ -n "${1-}" ]; do
 done
 
 [[ -z "$arch" ]] && { echo "Error: arch not set"; exit 1; }
-[[ -z "$format" ]] && { echo "Error: format not set"; exit 1; }
 
-MKOSI_OUT_DIR="./out/${arch}/${format}"
+MKOSI_OUT_DIR="./out/${arch}"
 mkdir -p "${MKOSI_OUT_DIR}"
 
 mkosi_arch=""
@@ -100,4 +86,4 @@ esac
 
 # /home/fedora/mkosivenv/bin/mkosi -f --architecture="${mkosi_arch}" --output-directory="${MKOSI_OUT_DIR}" "${mkosi_args[@]}"
 # MKOSI_DNF=/usr/bin/dnf4 is needed on newer distros until this patch is availalbe https://github.com/rpm-software-management/dnf5/issues/1321
-mkosi --debug -f --format="${format}" --architecture="${mkosi_arch}" --output-directory="${MKOSI_OUT_DIR}" "${mkosi_args[@]}"
+mkosi --debug -f --architecture="${mkosi_arch}" --output-directory="${MKOSI_OUT_DIR}" "${mkosi_args[@]}"

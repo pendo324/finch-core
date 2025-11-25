@@ -3,7 +3,7 @@
 set -xe
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd -- "${CURRENT_DIR}/.." && pwd)"
+PROJECT_ROOT="$(cd -- "${CURRENT_DIR}/../.." && pwd)"
 
 # set arch to uname if its not set
 uname=$(uname -m)
@@ -86,7 +86,7 @@ export HOST_ARCH="${ARCH}"
   -Q /usr/bin \
   --exportdir "${BUILD_OUT_LIB_DIR}/binfmt.d/"
 
-MKOSI_USR_PATH="./mkosi.extra/usr"
+MKOSI_USR_PATH="${CURRENT_DIR}/mkosi.images/base/mkosi.extra/usr"
 MKOSI_BINFMT_PATH="${MKOSI_USR_PATH}/lib/binfmt.d"
 MKOSI_USR_BIN_PATH="${MKOSI_USR_PATH}/bin"
 
@@ -135,7 +135,7 @@ cosign_release="3.0.2"
 # see: https://github.com/docker/docker-credential-helpers/releases/tag/v0.9.4 release
 docker_credential_helpers_release="0.9.4"
 
-PKGDIR="./mkosi.extra/opt"
+PKGDIR="${CURRENT_DIR}/mkosi.images/base/mkosi.extra/opt"
 rm -rf "${PKGDIR}"
 mkdir -p "${PKGDIR}"
 
@@ -177,9 +177,9 @@ mkdir artifacts
 blob_prefix="./_output/blobs/sha256/"
 index_manifest=$(jq -r '.manifests[0].digest' ./_output/index.json | sed -e 's/^sha256://')
 
-# Check if the first layer's mediaType is application/vnd.oci.image.layer.v1.tar
+# Check if the first layer's mediaType is application/vnd.oci.image.layer.v1.tar or .tar+gzip
 media_type=$(jq -r '.layers[0].mediaType' "${blob_prefix}${index_manifest}")
-if [ "$media_type" = "application/vnd.oci.image.layer.v1.tar" ]; then
+if [[ "$media_type" =~ "$application/vnd.oci.image.layer.v1.tar" ]]; then
   # For uncompressed tar layers, use the layer digest directly
   layer_file="${blob_prefix}$(jq -r '.layers[0].digest' "${blob_prefix}${index_manifest}" | sed -e 's/^sha256://' )"
   tar -xvf "${layer_file}" -C artifacts
@@ -195,11 +195,11 @@ else
 fi
 
 
-find . -iregex "\./artifacts/fuse-sshfs-[0-9].*" -exec cp {} ../mkosi.extra/opt/ \;
-find . -iregex "\./artifacts/cloud-init-[0-9].*" -exec cp {} ../mkosi.extra/opt/ \;
-find . -iregex "\./artifacts/fuse-sshfs-[0-9].*${ARCH}.*" -exec cp {} ../mkosi.extra/opt/ \;
+find . -iregex "\./artifacts/fuse-sshfs-[0-9].*" -exec cp {} "${PKGDIR}" \;
+find . -iregex "\./artifacts/cloud-init-[0-9].*" -exec cp {} "${PKGDIR}" \;
+find . -iregex "\./artifacts/fuse-sshfs-[0-9].*${ARCH}.*" -exec cp {} "${PKGDIR}" \;
 
-ls -lah ../mkosi.extra/opt/
+ls -lah "${CURRENT_DIR}/mkosi.images/base/mkosi.extra/opt/"
 
 popd
 
@@ -212,4 +212,4 @@ popd
 # sudo aa-teardown || true
 # sudo apt-get remove apparmor
 
-./mkosi.sh --format disk --arch $mkosi_arch
+./mkosi.sh --arch $mkosi_arch -- --image-id wsl-rootfs

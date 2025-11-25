@@ -93,11 +93,11 @@ jobs:
             ECR_CACHE_REPO="${{ secrets.ECR_CACHE_REPO }}" \
             ./build.sh
           arch="${{ steps.mkosi-arch.outputs.arch }}"
-          sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/disk/image.raw" \
-            "./out/${arch}/disk/image.qcow2"
-          tar -cvf "./out/${arch}/disk/image.tar" -C "./out/${arch}/disk/container-with-kernel" .
+          sudo qemu-img convert -f raw -c -O qcow2 "./out/${arch}/os-image.raw" \
+            "./out/${arch}/os-image.qcow2"
+          tar -cvf "./out/${arch}/container-with-kernel-image.tar" -C "./out/${arch}/container-with-kernel" .
           skopeo copy \
-            "oci-archive:./out/${arch}/disk/image.tar" \
+            "oci-archive:./out/${arch}/container-with-kernel-image.tar" \
             docker://"${{ secrets.ECR_WINDOWS_IMAGE_REPO }}:${{ steps.mkosi-arch.outputs.arch }}-with-kernel-${{github.run_id}}"
       - name: Run container build
         if: steps.mkosi-arch.outputs.arch == 'x86-64'
@@ -105,21 +105,21 @@ jobs:
           set -x
           cd ./deps/mkosi
           arch="${{ steps.mkosi-arch.outputs.arch }}"
-          PATH="/$HOME/.local/bin/:$PATH" ./mkosi.sh --format oci --arch $arch
-          tar -cvf "./out/${arch}/oci/image.tar" -C "./out/${arch}/oci/image" .
+          PATH="/$HOME/.local/bin/:$PATH" ./mkosi.sh --arch $arch -- --image-id wsl-rootfs
+          tar -cvf "./out/${arch}/wsl-rootfs-image.tar" -C "./out/${arch}/wsl-rootfs" .
           skopeo copy \
-            "oci-archive:./out/${arch}/oci/image.tar" \
-            docker://"${{ secrets.ECR_WINDOWS_IMAGE_REPO }}:${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}"
+            "oci-archive:./out/${arch}/wsl-rootfs-image.tar" \
+            docker://"${{ secrets.ECR_WINDOWS_IMAGE_REPO }}:${{ steps.mkosi-arch.outputs.arch }}-wsl-rootfs-${{github.run_id}}"
       - name: Upload container image artifacts
         if: steps.mkosi-arch.outputs.arch == 'x86-64'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: image-oci-${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}.tar
-          path: ./deps/mkosi/out/${{ steps.mkosi-arch.outputs.arch }}/oci/image.tar
+          path: ./deps/mkosi/out/${{ steps.mkosi-arch.outputs.arch }}/wsl-rootfs-image.tar
           if-no-files-found: error
       - name: Upload OS image artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: image-${{ steps.mkosi-arch.outputs.arch }}-${{github.run_id}}.qcow2
-          path: ./deps/mkosi/out/${{ steps.mkosi-arch.outputs.arch }}/disk/image.qcow2
+          path: ./deps/mkosi/out/${{ steps.mkosi-arch.outputs.arch }}/disk/os-image.qcow2
           if-no-files-found: error

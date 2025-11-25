@@ -11,7 +11,7 @@ wingit-temp/
 deps/mkosi/mkosi.cache/*.*
 !deps/mkosi/mkosi.cache/*.gitkeep
 deps/mkosi/mkosi.builddir/
-deps/mkosi/mkosi.extra/
+deps/mkosi/mkosi.images/base/mkosi.extra/
 deps/mkosi/binfmt/bin
 deps/mkosi/qemu-binfmt-conf.sh
 deps/mkosi/out/
