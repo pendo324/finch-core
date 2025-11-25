@@ -212,4 +212,4 @@ popd
 # sudo aa-teardown || true
 # sudo apt-get remove apparmor
 
-./mkosi.sh --arch $mkosi_arch -- --image-id wsl-rootfs
+./mkosi.sh --arch $mkosi_arch -- --image-id os-image
