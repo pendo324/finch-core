@@ -1,24 +1,24 @@
 name: macOS CI
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - "**.md"
-      - "src/**"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - .github/workflows/macos-ci.yaml
-      - .gitmodules
-      - deps/container-runtime-full-archive.conf
-      - deps/full-os.conf
-      - deps/lima-bundles.conf
-      - e2e/**
-      - lima-template/**
-      - Makefile
-      - Makefile.darwin
+  # push:
+  #   branches:
+  #     - main
+  #   paths-ignore:
+  #     - "**.md"
+  #     - "src/**"
+  # pull_request:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - .github/workflows/macos-ci.yaml
+  #     - .gitmodules
+  #     - deps/container-runtime-full-archive.conf
+  #     - deps/full-os.conf
+  #     - deps/lima-bundles.conf
+  #     - e2e/**
+  #     - lima-template/**
+  #     - Makefile
+  #     - Makefile.darwin
   workflow_dispatch:
 
 concurrency:

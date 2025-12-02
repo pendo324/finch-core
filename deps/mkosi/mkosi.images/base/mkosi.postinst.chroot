@@ -1,0 +1,70 @@
+#!/bin/sh
+set -xeu
+
+ssh-keygen -A
+
+# install out of tree packages
+ls /opt
+rpm -ivh "/opt/cosign.rpm"
+rm -rf "/opt/cosign.rpm"
+
+rpm -ivh "/opt/fuse-sshfs-*.amzn2023.*.rpm"
+rm -rf "/opt/fuse*"
+
+rpm -e --noscripts --nodeps cloud-init
+rpm -ivh "/opt/cloud-init-*.amzn2023*.noarch.rpm"
+rm -rf "/opt/cloud-init*"
+
+echo "Enabling services"
+
+bash -c 'cat << EOF > /usr/lib/systemd/system-preset/91-finch.preset
+enable sshd
+
+# Enable cloud-init services
+# https://bugzilla.redhat.com/show_bug.cgi?id=2233948
+enable cloud-config.service
+enable cloud-final.service
+enable cloud-init.service
+enable cloud-init-local.service
+enable systemd-resolved.service
+enable systemd-networkd.service
+EOF'
+
+# curl \
+#   https://raw.githubusercontent.com/rpm-software-management/distribution-gpg-keys/refs/heads/main/keys/fedora/RPM-GPG-KEY-fedora-42-primary \
+#   | sudo tee /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-42 > /dev/null
+
+# bash -c 'cat << EOF > /etc/yum.repos.d/fedora42.repo
+# [fedora42]
+# name=Fedora 42
+# metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f42&arch=\$basearch
+# enabled=1
+# countme=1
+# metadata_expire=7d
+# repo_gpgcheck=0
+# type=rpm
+# gpgcheck=1
+# gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-42
+# skip_if_unavailable=False
+# EOF'
+
+# sudo dnf install -y \
+#   --repo fedora42 \
+#   fuse-sshfs
+
+
+# Fix SELinux labels so systemd service can start
+restorecon -R -v /usr/bin/
+
+touch /etc/machine-id
+
+# dnf remove grub* --setopt protected_packages=
+
+# ls -la /
+# touch /tmp-zeros
+# chattr +C /tmp-zeros
+# dd bs=1M if=/dev/zero of=/tmp-zeros || true
+# echo "(Don't worry -- that out-of-space error was expected.)"
+# btrfs filesystem sync /
+# rm -f /tmp-zeros
+# btrfs filesystem sync /

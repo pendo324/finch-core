@@ -1,20 +1,20 @@
 name: Windows CI
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - "**.md"
-      - "src/**"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - .github/workflows/windows-ci.yaml
-      - .gitmodules
-      - deps/rootfs.conf
-      - Makefile
-      - Makefile.windows
+  # push:
+  #   branches:
+  #     - main
+  #   paths-ignore:
+  #     - "**.md"
+  #     - "src/**"
+  # pull_request:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - .github/workflows/windows-ci.yaml
+  #     - .gitmodules
+  #     - deps/rootfs.conf
+  #     - Makefile
+  #     - Makefile.windows
   workflow_dispatch:
 
 concurrency:
