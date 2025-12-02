@@ -39,7 +39,7 @@ jobs:
             qemu-img \
             docker \
             jq \
-            xfsprogs \
+            e2fsprogs \
             dosfstools \
             cpio \
             zstd \
